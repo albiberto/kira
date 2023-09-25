@@ -1,6 +1,7 @@
 namespace Kira;
 
 using Builders;
+using Comparers.Filter;
 using Infrastructure.Clients;
 using Infrastructure.Interceptors;
 using Infrastructure.Options;
@@ -25,6 +26,8 @@ public static class Bootstrapper
     public static void AddKira(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<FilterBuilder>();
+        builder.Services.AddSingleton<StatusModelComparer>();
+        builder.Services.AddSingleton<TypeModelComparer>();
 
         builder.Services.AddSingleton<JiraAuthInterceptor>();
         builder.Services
