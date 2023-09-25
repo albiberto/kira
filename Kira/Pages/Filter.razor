@@ -1,0 +1,76 @@
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Index> L
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-4 mb-4">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">1. Projects</RadzenText>
+
+                <RadzenDropDown
+                    @bind-Value=designer.SelectedProjectIds
+                    Data=designer.Projects
+                    TextProperty="Key"
+                    ValueProperty="Id"
+                    AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Change=@ProjectChangeAsync
+                    Disabled=isLoading
+                    Multiple=true
+                    AllowClear=true
+                    AllowSelectAll="false"
+                    Chips=true
+                    Placeholder="Select projects"
+                    Style="width: 100%; max-width: 400px;">
+                    <Template>
+                        <RadzenImage Path="@(((ProjectModel)context).Avatar)" style="width: 32px; height: 32px; border-radius: 16px; margin: 0; padding: 0;"/>
+                        @(((ProjectModel)context).Key)
+                    </Template>
+                </RadzenDropDown>
+            </RadzenCard>
+        </div>
+
+        <div class="col-xl-4 mb-4">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">2. Include Components</RadzenText>
+
+                <RadzenDropDown
+                    @bind-Value=designer.SelectedIncludedComponentIds
+                    Data=designer.IncludedComponents
+                    TextProperty="Name"
+                    ValueProperty="Id"
+                    DisabledProperty="Disabled"
+                    Change=@(args => ComponentChangeAsync(Designer.Type.Included, (IEnumerable<string>)args))
+                    Disabled=@(isLoading || !designer.IncludedComponents.Any())
+                    AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Multiple=true
+                    AllowClear=true
+                    Chips=true
+                    Placeholder="Select components"
+                    Style="width: 100%; max-width: 400px;">
+                </RadzenDropDown>
+            </RadzenCard>
+        </div>
+
+        <div class="col-xl-4 mb-4">
+            <RadzenCard>
+                <RadzenText TextStyle="TextStyle.H6" TagName="TagName.H3">3. Exclude Components</RadzenText>
+
+                <RadzenDropDown
+                    @bind-Value=designer.SelectedExcludedComponentIds
+                    Data=designer.ExcludedComponents
+                    TextProperty="Name"
+                    ValueProperty="Id"
+                    DisabledProperty="Disabled"
+                    Change=@(args => ComponentChangeAsync(Designer.Type.Excluded, (IEnumerable<string>)args))
+                    Disabled=@(isLoading || !designer.ExcludedComponents.Any())
+                    AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Multiple=true
+                    AllowClear=true
+                    Chips=true
+                    Placeholder="Select components"
+                    Style="width: 100%; max-width: 400px;">
+                </RadzenDropDown>
+            </RadzenCard>
+        </div>
+    </div>
+</div>
