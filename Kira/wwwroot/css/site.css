@@ -84,3 +84,11 @@ a:focus {
 .loading-progress-text:after {
     content: var(--blazor-load-percentage-text, "Loading");
 }
+
+.icon{
+    width: 24px; 
+    height: 24px; 
+    border-radius: 12px; 
+    margin: 0; 
+    padding: 0;
+}

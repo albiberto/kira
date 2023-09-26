@@ -1,4 +1,10 @@
 ﻿@page "/workload"
+@using Kira.Domain
+@using Kira.Extensions
+@using Kira.Infrastructure.Options
+@using Microsoft.Extensions.Options
+
+@inject IOptions<JiraOptions> Options;
 
 <Filter @bind-Query="Query"></Filter>
 
@@ -9,5 +15,73 @@
                 <strong class="rz-color-white">@Query</strong>
             </RadzenCard>
         </div>
+    </div>
+
+    <div class="row">
+
+        <RadzenDataGrid @ref="grid"
+                        TItem="Issue"
+                        Data="@issues" LoadData="LoadData" Count="count" IsLoading="isLoading"
+                        AllowGrouping="false"
+                        AllowFiltering="true"
+                        AllowPaging="false"
+                        AllowSorting="true"
+                        Render="@OnRender">
+            <HeaderTemplate>
+                Header
+            </HeaderTemplate>
+            <GroupHeaderTemplate>
+                @context.GroupDescriptor.GetTitle(): @(context.Data.Key ?? "Unassigned")
+            </GroupHeaderTemplate>
+            <Columns>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.Type" Title="T" Width="80px;">
+                    <Template Context="issue">
+                        <RadzenImage Path="@issue.Fields.Type.IconUrl" class="icon"/>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.Priority" Title="P" Width="80px;">
+                    <Template Context="issue">
+                        <RadzenImage Path="@issue.Fields.Priority.IconUrl" class="icon"/>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Key" Title="Key" Width="120px">
+                    <Template Context="issue">
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.Parent.Key" Title="Parent" Width="120px">
+                    <Template Context="issue">
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Fields.Parent.Key}") Text="@issue.Fields.Parent.Key" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.Summary" Title="Summary"/>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.Status.Name" Title="Status" Width="140px;">
+                    <Template Context="issue">
+                        <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@(issue.Fields.Status.StatusCategory.Id.ToBadgeStyle()) Text="@issue.Fields.Status.Name" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeOriginalEstimate" Title="Original" Width="140px;">
+                    <Template Context="issue">
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeSpent" Title="Spent" Width="140px;">
+                    <Template Context="issue">
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeSpent.ToWorkingDaysHoursMinutes()" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
+                    <Template Context="issue">
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeEstimate.ToWorkingDaysHoursMinutes()" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
+                    <Template Context="issue">
+                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Min="0" Max="100" Value="@issue.Fields.Progress.Percent.ToDouble()" ShowValue="false" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+
     </div>
 </div>
