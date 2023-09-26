@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "69e90a66-184a-47b7-9346-60a2f945415a",
+		"name": "Jira Euris Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1325649",
+		"_collection_link": "https://cowboysteam.postman.co/workspace/Team-Workspace~b5310ef1-66d2-475c-80d2-c0f0b3c7a78d/collection/1325649-69e90a66-184a-47b7-9346-60a2f945415a?action=share&source=collection_link&creator=1325649"
+	},
+	"item": [
+		{
+			"name": "GetAllProjectComponents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}project/{{projectId}}/components",
+					"host": [
+						"{{origin}}project"
+					],
+					"path": [
+						"{{projectId}}",
+						"components"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllProjects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}project",
+					"host": [
+						"{{origin}}project"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllStatus",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}status",
+					"host": [
+						"{{origin}}status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllProjectStatusPerType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}project/{{projectId}}/statuses",
+					"host": [
+						"{{origin}}project"
+					],
+					"path": [
+						"{{projectId}}",
+						"statuses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetIssueType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://jira.euris.it/rest/api/2/issuetype/10100",
+					"protocol": "https",
+					"host": [
+						"jira",
+						"euris",
+						"it"
+					],
+					"path": [
+						"rest",
+						"api",
+						"2",
+						"issuetype",
+						"10100"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search:Workloads",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"jql\": \"project in (25707) AND component not in (28710)  AND status not in (10108, 10001)\",\r\n    \"startAt\": 0,\r\n    \"maxResults\": 100,\r\n    \"fields\": [\"id\", \"key\", \"assignee\", \"reporter\", \"status\", \"priority\", \"summary\", \"parent\", \"labels\", \"issuetype\", \"components\", \"timeoriginalestimate\", \"timespent\", \"timeestimate\"]\r\n}"
+				},
+				"url": {
+					"raw": "{{origin}}search",
+					"host": [
+						"{{origin}}search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search:SampleIssueWithAllFields",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}search?jql=project=EIMMS AND issuekey = EIMMS-150",
+					"host": [
+						"{{origin}}search"
+					],
+					"query": [
+						{
+							"key": "jql",
+							"value": "project=EIMMS AND issuekey = EIMMS-150"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllStatusCategory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{origin}}statuscategory",
+					"host": [
+						"{{origin}}statuscategory"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{password}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{username}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
