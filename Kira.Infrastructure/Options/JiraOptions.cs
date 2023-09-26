@@ -11,7 +11,9 @@ public class AuthOptions
 public class JiraOptions
 {
     [Required, MinLength(6)] public string BaseAddress { get; set; } = null!;
-
+    
+    [Required, MinLength(6)] public string UIAddress { get; set; } = null!;
+    
     [Required] public HashSet<ProjectOptions> Projects { get; set; } = new();
 }
 

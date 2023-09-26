@@ -1,5 +1,6 @@
 namespace Kira.Infrastructure.Clients;
 
+using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Domain;
@@ -11,7 +12,8 @@ public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
         new()
         {
             PropertyNameCaseInsensitive = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            ReferenceHandler = ReferenceHandler.Preserve,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         };
 
     public async Task<IEnumerable<Project>> GetAllProjects()
@@ -87,5 +89,38 @@ public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
         }
 
         return Enumerable.Empty<ProjectType>();
+    }
+    
+    public async Task<IEnumerable<Issue>> PostSearchAsync(string jql, IEnumerable<string> fields)
+    {
+        var request = new
+        {
+            jql,
+            startAt = 0,
+            maxResults = 100,
+            fields = fields.ToArray()
+        };
+
+        var result = await http.PostAsJsonAsync("search", request);
+        var json = await result.Content.ReadAsStringAsync();
+
+        if (!result.IsSuccessStatusCode) return Array.Empty<Issue>();
+
+        await using (var stream = await result.Content.ReadAsStreamAsync())
+            try
+            {
+                var issues = await JsonSerializer.DeserializeAsync<SearchResponse>(stream, JsonSerializerOptions);
+                if (issues is not null) return issues.Issues;
+            }
+            catch (JsonException e)
+            {
+                logger.LogError(e, "Error during JQL query execution: {jql}", jql);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "An unexpected error occurred.");
+            }
+
+        return Array.Empty<Issue>();
     }
 }
