@@ -19,12 +19,17 @@ public partial class Workload
     RadzenDataGrid<Issue> grid = null!;
 
 
+    public async Task CallBack(string query)
+    {
+        Query = query;
+        await grid.Reload();
+    }
+    
     async Task LoadData(LoadDataArgs args)
     {
         isLoading = true;
 
         await Task.Yield();
-        await Task.Delay(8000);
 
         var result = await Client.PostSearchAsync(Query, Fields);
 

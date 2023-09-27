@@ -6,7 +6,7 @@
 
 @inject IOptions<JiraOptions> Options;
 
-<Filter @bind-Query="Query"></Filter>
+<Filter Query=Query QueryChanged=CallBack></Filter>
 
 <div class="container-fluid">
     <div class="row">
