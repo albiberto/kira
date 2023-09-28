@@ -3,8 +3,8 @@ namespace Kira.Extensions;
 public static class TimeExtensions
 {
     public static int ToSeconds(this object? field) =>
-        int.TryParse($"{field}", out var value) 
-            ? value 
+        int.TryParse($"{field}", out var value)
+            ? value
             : 0;
 
     public static string ToDaysHoursMinutes(this int? value)
@@ -21,11 +21,11 @@ public static class TimeExtensions
 
         return $"{days}d {hours}h {minutes}m";
     }
-    
+
     public static string ToWorkingDaysHoursMinutes(this int? value)
     {
         var seconds = value ?? 0;
-        
+
         // Calculate working days, hours, minutes, and seconds
         var workingDays = seconds / 28800; // There are 28,800 seconds in an 8-hour workday
         var remainingSeconds = seconds % 28800; // Calculate the remaining seconds after calculating working days
@@ -36,5 +36,4 @@ public static class TimeExtensions
 
         return $"{workingDays}d {hours}h {minutes}m";
     }
-
 }

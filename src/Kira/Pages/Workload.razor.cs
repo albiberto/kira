@@ -8,15 +8,15 @@ using Radzen.Blazor;
 
 public partial class Workload
 {
-    [Inject] JiraClient Client { get; set; } = null!;
-    
-    string Query { get; set; } = string.Empty;
     static readonly string[] Fields = { "id", "key", "assignee", "reporter", "status", "issuetype", "progress", "parent", "priority", "summary", "labels", "components", "timeoriginalestimate", "timespent", "timeestimate" };
+    int count;
+    RadzenDataGrid<Issue> grid = null!;
 
     bool isLoading = true;
-    int count;
     IList<Issue>? issues;
-    RadzenDataGrid<Issue> grid = null!;
+    [Inject] JiraClient Client { get; set; } = null!;
+
+    string Query { get; set; } = string.Empty;
 
 
     public async Task CallBack(string query)
@@ -24,7 +24,7 @@ public partial class Workload
         Query = query;
         await grid.Reload();
     }
-    
+
     async Task LoadData(LoadDataArgs args)
     {
         isLoading = true;
@@ -34,18 +34,18 @@ public partial class Workload
         var result = await Client.PostSearchAsync(Query, Fields);
 
         // var result = new List<Issue>();
-        
+
         issues = result.OrderBy(issue => issue.Fields.Assignee?.EmailAddress ?? "Unassigned").ToList();
         count = issues.Count;
-        
+
         isLoading = false;
     }
 
     void OnRender(DataGridRenderEventArgs<Issue> args)
     {
         if (!args.FirstRender) return;
-        
-        args.Grid.Groups.Add(new(){ Property = "Fields.Assignee.EmailAddress", Title = "Email" });
+
+        args.Grid.Groups.Add(new() { Property = "Fields.Assignee.EmailAddress", Title = "Email" });
         StateHasChanged();
     }
 }

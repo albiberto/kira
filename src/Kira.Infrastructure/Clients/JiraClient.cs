@@ -13,7 +13,7 @@ public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
         {
             PropertyNameCaseInsensitive = true,
             ReferenceHandler = ReferenceHandler.Preserve,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
     public async Task<IEnumerable<Project>> GetAllProjects()
@@ -90,7 +90,7 @@ public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
 
         return Enumerable.Empty<ProjectType>();
     }
-    
+
     public async Task<IEnumerable<Issue>> PostSearchAsync(string jql, IEnumerable<string> fields)
     {
         var request = new
