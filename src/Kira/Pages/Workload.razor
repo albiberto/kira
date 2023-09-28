@@ -1,9 +1,7 @@
-﻿@page "/workload"
-@using Kira.Domain
-@using Kira.Extensions
+﻿@using Kira.Extensions
 @using Kira.Infrastructure.Options
 @using Microsoft.Extensions.Options
-
+@using Kira.Domain
 @inject IOptions<JiraOptions> Options;
 
 <Filter Query=Query QueryChanged=CallBack></Filter>
@@ -46,38 +44,38 @@
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Key" Title="Key" Width="120px">
                     <Template Context="issue">
-                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key" />
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.Parent.Key" Title="Parent" Width="120px">
                     <Template Context="issue">
-                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Fields.Parent.Key}") Text="@issue.Fields.Parent.Key" />
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Fields.Parent.Key}") Text="@issue.Fields.Parent.Key"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.Summary" Title="Summary"/>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.Status.Name" Title="Status" Width="140px;">
                     <Template Context="issue">
-                        <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@(issue.Fields.Status.StatusCategory.Id.ToBadgeStyle()) Text="@issue.Fields.Status.Name" />
+                        <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@(issue.Fields.Status.StatusCategory.Id.ToBadgeStyle()) Text="@issue.Fields.Status.Name"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeOriginalEstimate" Title="Original" Width="140px;">
                     <Template Context="issue">
-                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()" />
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeSpent" Title="Spent" Width="140px;">
                     <Template Context="issue">
-                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeSpent.ToWorkingDaysHoursMinutes()" />
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeSpent.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
                     <Template Context="issue">
-                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeEstimate.ToWorkingDaysHoursMinutes()" />
+                        <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeEstimate.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
                     <Template Context="issue">
-                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Min="0" Max="100" Value="@issue.Fields.Progress.Percent.ToDouble()" ShowValue="false" />
+                        <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Min="0" Max="100" Value="@issue.Fields.Progress.Percent.ToDouble()" ShowValue="false"/>
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>

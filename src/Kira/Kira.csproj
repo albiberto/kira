@@ -35,11 +35,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Pages\Filter.model.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
+        <Compile Update="Pages\FilterForm.model.razor.cs">
+            <DependentUpon>FilterForm.razor</DependentUpon>
         </Compile>
-        <Compile Update="Pages\Filter.desginer.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
+        <Compile Update="Pages\FilterForm.designer.razor.cs">
+            <DependentUpon>FilterForm.razor</DependentUpon>
         </Compile>
     </ItemGroup>
 
