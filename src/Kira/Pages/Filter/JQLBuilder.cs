@@ -4,7 +4,7 @@ using System.Text;
 
 public static class JqlBuilder
 {
-    public static string ToJql(this FilterForm.Designer model) => InternalToJql(model);
+    public static string ToJql(this FilterForm.FormModel model) => InternalToJql(model);
 
     static string InternalToJql(this JqlModel model)
     {
@@ -73,7 +73,7 @@ public static class JqlBuilder
         public IEnumerable<(string ProjectId, string Id)> IncludedStatues => includedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
         public IEnumerable<(string ProjectId, string Id)> ExcludedStatues => excludedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
 
-        public static implicit operator JqlModel(FilterForm.Designer formModel) =>
+        public static implicit operator JqlModel(FilterForm.FormModel formModel) =>
             new(
                 formModel.Projects.Select(project => project.Id),
                 formModel.IncludedComponents.ToTuple(),

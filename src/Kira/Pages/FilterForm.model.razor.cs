@@ -1,59 +1,50 @@
 ﻿namespace Kira.Pages;
 
+using System.Collections.Immutable;
 using Domain;
+using Infrastructure.Options;
 
 public partial class FilterForm
 {
-    public interface IFilterModel
+    public record ProjectModel(Project Project)
     {
-        ProjectModel Project { get; }
-        string Id { get; }
-        bool Disabled { get; }
-
-        void Disable(bool disable);
+        public string Id { get; } = Project.Id;
+        public string Key { get; } = Project.Key;
+        public string Avatar { get; } = Project.AvatarUrls._16x16;
     }
 
-    public record ProjectModel(Project project)
+    public record ComponentModel(ProjectModel Project, Component Component) : IFilterModel
     {
-        public string Id { get; } = project.Id;
-        public string Key { get; } = project.Key;
-        public string Avatar { get; } = project.AvatarUrls._16x16;
-    }
+        public ProjectModel Project { get; } = Project;
 
-    public record ComponentModel(ProjectModel project, Component component) : IFilterModel
-    {
-        public string Name { get; } = $"{project.Key} | {component.Name}";
-        public ProjectModel Project { get; } = project;
-
-        public string Id { get; } = component.Id;
+        public string Name { get; } = $"{Project.Key} | {Component.Name}";
+        public string Id { get; } = Component.Id;
 
         public bool Disabled { get; private set; }
-
         public void Disable(bool disable) => Disabled = disable;
     }
 
-    public record TypeModel(ProjectModel project, ProjectType type) : IFilterModel
+    public record TypeModel(ProjectModel Project, ProjectType Type) : IFilterModel
     {
-        public string Name { get; } = type.Name;
-        public ProjectModel Project { get; } = project;
+        public ProjectModel Project { get; } = Project;
 
-        public string Id { get; } = type.Id;
+        public string Id { get; } = Type.Id;
+        public string Name { get; } = Type.Name;
+
 
         public bool Disabled { get; private set; }
-
         public void Disable(bool disable) => Disabled = disable;
     }
 
-    public record StatusModel(ProjectModel project, ProjectType type, Status status) : IFilterModel
+    public record StatusModel(ProjectModel Project, ProjectType Type, Status Status) : IFilterModel
     {
-        public ProjectType Type { get; } = type;
-        public string Name { get; } = status.Name;
-        public ProjectModel Project { get; } = project;
+        public ProjectModel Project { get; } = Project;
+        
+        public string Id { get; } = Status.Id;
+        public string Name { get; } = Status.Name;
 
-        public string Id { get; } = status.Id;
 
         public bool Disabled { get; private set; }
-
         public void Disable(bool disable) => Disabled = disable;
     }
 }
