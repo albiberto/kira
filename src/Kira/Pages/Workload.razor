@@ -1,32 +1,25 @@
-﻿@using Kira.Extensions
+﻿@page "/workloads"
+
+@using Kira.Extensions
 @using Kira.Infrastructure.Options
 @using Microsoft.Extensions.Options
 @using Kira.Domain
 @inject IOptions<JiraOptions> Options;
 
-<Filter Query=Query QueryChanged=CallBack></Filter>
-
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xl-12 mb-4">
-            <RadzenCard class="rz-background-color-primary rz-p-8">
-                <strong class="rz-color-white">@Query</strong>
-            </RadzenCard>
-        </div>
-    </div>
-
-    <div class="row">
+        <Filter Query=Query QueryChanged=CallBack></Filter>
+    <div class="row mt-2">
 
         <RadzenDataGrid @ref="grid"
                         TItem="Issue"
                         Data="@issues" LoadData="LoadData" Count="count" IsLoading="isLoading"
                         AllowGrouping="false"
-                        AllowFiltering="true"
+                        AllowFiltering="false"
                         AllowPaging="false"
                         AllowSorting="true"
                         Render="@OnRender">
             <HeaderTemplate>
-                Header
+                @Query
             </HeaderTemplate>
             <GroupHeaderTemplate>
                 @context.GroupDescriptor.GetTitle(): @(context.Data.Key ?? "Unassigned")
@@ -58,22 +51,22 @@
                         <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@(issue.Fields.Status.StatusCategory.Id.ToBadgeStyle()) Text="@issue.Fields.Status.Name"/>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeOriginalEstimate" Title="Original" Width="140px;">
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeOriginalEstimate" Title="Original" Width="140px;" Sortable="false">
                     <Template Context="issue">
                         <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeSpent" Title="Spent" Width="140px;">
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.TimeSpent" Title="Spent" Width="140px;" Sortable="false">
                     <Template Context="issue">
                         <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeSpent.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;" Sortable="false">
                     <Template Context="issue">
                         <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.Fields.TimeEstimate.ToWorkingDaysHoursMinutes()"/>
                     </Template>
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;">
+                <RadzenDataGridColumn TItem="Issue" Property="Fields.RemainingEstimate" Title="Remaining" Width="140px;" Sortable="false">
                     <Template Context="issue">
                         <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Min="0" Max="100" Value="@issue.Fields.Progress.Percent.ToDouble()" ShowValue="false"/>
                     </Template>

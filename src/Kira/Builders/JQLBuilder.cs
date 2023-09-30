@@ -1,10 +1,11 @@
-﻿namespace Kira.Pages.Filter;
+﻿namespace Kira.Builders;
 
 using System.Text;
+using Pages;
 
 public static class JqlBuilder
 {
-    public static string ToJql(this FilterForm.FormModel model) => InternalToJql(model);
+    public static string ToJql(this Filter.FormModel model) => InternalToJql(model);
 
     static string InternalToJql(this JqlModel model)
     {
@@ -58,7 +59,7 @@ public static class JqlBuilder
         return jqlQueryBuilder.ToString();
     }
 
-    static IEnumerable<(string ProjectId, string Id)> ToTuple(this IEnumerable<FilterForm.IFilterModel>? model) => model?.Select(m => (m.Project.Id, m.Id)) ?? Enumerable.Empty<(string, string)>();
+    static IEnumerable<(string ProjectId, string Id)> ToTuple(this IEnumerable<Filter.IFilterModel>? model) => model?.Select(m => (m.Project.Id, m.Id)) ?? Enumerable.Empty<(string, string)>();
 
     public class JqlModel(IEnumerable<string>? projects, IEnumerable<(string ProjectId, string Id)>? includedComponents, IEnumerable<(string ProjectId, string Id)>? excludedComponents, IEnumerable<(string ProjectId, string Id)>? includedTypes, IEnumerable<(string ProjectId, string Id)>? excludedTypes, IEnumerable<(string ProjectId, string Id)>? includedStatues, IEnumerable<(string ProjectId, string Id)>? excludedStatues)
     {
@@ -73,15 +74,15 @@ public static class JqlBuilder
         public IEnumerable<(string ProjectId, string Id)> IncludedStatues => includedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
         public IEnumerable<(string ProjectId, string Id)> ExcludedStatues => excludedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
 
-        public static implicit operator JqlModel(FilterForm.FormModel formModel) =>
+        public static implicit operator JqlModel(Filter.FormModel formModel) =>
             new(
-                formModel.Projects.Select(project => project.Id),
-                formModel.IncludedComponents.ToTuple(),
-                formModel.ExcludedComponents.ToTuple(),
-                formModel.IncludedTypes.ToTuple(),
-                formModel.ExcludedTypes.ToTuple(),
-                formModel.IncludedStatues.ToTuple(),
-                formModel.ExcludedStatues.ToTuple()
+                formModel.SelectedProjects?.Select(project => project.Id),
+                formModel.SelectedIncludedComponents.ToTuple(),
+                formModel.SelectedExcludedComponents.ToTuple(),
+                formModel.SelectedIncludedTypes.ToTuple(),
+                formModel.SelectedExcludedTypes.ToTuple(),
+                formModel.SelectedIncludedStatues.ToTuple(),
+                formModel.SelectedExcludedStatues.ToTuple()
             );
     }
 }

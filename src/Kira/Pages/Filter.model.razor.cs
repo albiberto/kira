@@ -1,10 +1,8 @@
 ﻿namespace Kira.Pages;
 
-using System.Collections.Immutable;
 using Domain;
-using Infrastructure.Options;
 
-public partial class FilterForm
+public partial class Filter
 {
     public record ProjectModel(Project Project)
     {
@@ -39,7 +37,7 @@ public partial class FilterForm
     public record StatusModel(ProjectModel Project, ProjectType Type, Status Status) : IFilterModel
     {
         public ProjectModel Project { get; } = Project;
-        
+
         public string Id { get; } = Status.Id;
         public string Name { get; } = Status.Name;
 
