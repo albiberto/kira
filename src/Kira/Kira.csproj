@@ -35,17 +35,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Pages\FilterForm.model.razor.cs">
-            <DependentUpon>FilterForm.razor</DependentUpon>
+        <Compile Update="Pages\Filter.model.razor.cs">
+            <DependentUpon>Filter.razor</DependentUpon>
         </Compile>
-        <Compile Update="Pages\FilterForm.designer.razor.cs">
-            <DependentUpon>FilterForm.razor</DependentUpon>
+        <Compile Update="Pages\Filter.designer.razor.cs">
+            <DependentUpon>Filter.razor</DependentUpon>
         </Compile>
-        <Compile Update="Pages\FilterForm.model.abstarct.razor.cs">
-          <DependentUpon>FilterForm.razor</DependentUpon>
+        <Compile Update="Pages\Filter.model.abstarct.razor.cs">
+            <DependentUpon>Filter.razor</DependentUpon>
         </Compile>
-        <Compile Update="Pages\FilterForm.model.form.razor.cs">
-          <DependentUpon>FilterForm.razor</DependentUpon>
+        <Compile Update="Pages\Filter.model.form.razor.cs">
+            <DependentUpon>Filter.razor</DependentUpon>
         </Compile>
     </ItemGroup>
 

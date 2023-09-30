@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using Domain;
 using Infrastructure.Options;
 
-public partial class FilterForm
+public partial class Filter
 {
     public class FormModel
     {

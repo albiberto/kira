@@ -1,6 +1,6 @@
 namespace Kira.Pages;
 
-public partial class FilterForm
+public partial class Filter
 {
     public interface IFilterModel
     {
