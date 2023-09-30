@@ -10,16 +10,7 @@ using Radzen;
 
 public partial class FilterForm
 {
-    public enum DropDownListType
-    {
-        Included = 0,
-        Excluded = 1
-    }
-
     readonly HashSet<string> evaluatedProjects = new();
-    Designer designer = new();
-    bool isLoading = true;
-    bool popup;
 
     [Inject] JiraClient Client { get; set; } = null!;
     [Inject] IOptions<JiraOptions> Options { get; set; } = null!;
@@ -27,19 +18,17 @@ public partial class FilterForm
 
     [Parameter] public string Query { get; set; } = string.Empty;
     [Parameter] public EventCallback<string> QueryChanged { get; set; }
-
-    bool DisableSearch => designer.SelectedProjects?.Count is not (>= 0 and <= 3);
-
+    
     protected override async Task OnInitializedAsync()
     {
         var projects = (await Client.GetAllProjects()).ToList();
-        designer = new(projects);
+        formModel = new(projects);
 
-        await LoadProjectAsync(designer.Projects.Where(project => Options.Value.Defaults.Projects.Contains(project.Id)));
+        await LoadProjectAsync(formModel.Projects.Where(project => Options.Value.Defaults.Projects.Contains(project.Id)));
 
-        designer.Initialize(Options.Value.Defaults);
+        formModel.Initialize(Options.Value.Defaults);
     }
-
+    
     async Task LoadProjectAsync(IEnumerable<ProjectModel>? projects)
     {
         projects ??= Enumerable.Empty<ProjectModel>();
@@ -52,76 +41,43 @@ public partial class FilterForm
             var components = await Client.GetAllProjectsComponents(project.Id);
             var projectTypes = await Client.GetAllProjectStatues(project.Id);
 
-            designer!.Add(project, components.ToList(), projectTypes);
+            formModel.Add(project, components.ToList(), projectTypes);
             evaluatedProjects.Add(project.Id);
         }
 
         isLoading = false;
     }
 
-    public void ChangeComponent(DropDownListType dropDownListType, IEnumerable<ComponentModel>? components)
+    async Task ProjectChange(object? args)
     {
-        var ids = (components ?? Enumerable.Empty<ComponentModel>())
-            .Select(component => component.Id)
-            .ToImmutableHashSet();
-
-        var toChange = dropDownListType == DropDownListType.Included
-            ? designer!.ExcludedComponents
-            : designer!.IncludedComponents;
-
-        var toChangeDisable = toChange
-            .Where(c => ids.Contains(c.Id))
-            .Where(c => !c.Disabled);
-
-        foreach (var component in toChangeDisable) component.Disable(true);
-
-        var toChangeEnable = toChange
-            .Where(c => !ids.Contains(c.Id))
-            .Where(c => c.Disabled);
-
-        foreach (var component in toChangeEnable) component.Disable(false);
+        var projects = (args as IEnumerable<ProjectModel> ?? Enumerable.Empty<ProjectModel>()).ToList();
+        
+        await LoadProjectAsync(projects);
+        formModel.ClearSelected(projects);
     }
+    
+    void IncludedComponentsChange(object? args) => Change(formModel.ExcludedComponents, formModel.IncludedComponents, args);
+    void ExcludedComponentsChange(object? args) => Change(formModel.IncludedComponents, formModel.ExcludedComponents, args);
+    
+    void IncludedTypesChange(object? args) => Change(formModel.ExcludedTypes, formModel.IncludedTypes, args);
+    void ExcludedTypesChange(object? args) => Change(formModel.IncludedTypes, formModel.ExcludedTypes, args);
+    
+    void IncludedStatuesChange(object? statues) => Change(formModel.ExcludedStatues, formModel.IncludedStatues, statues);
+    void ExcludedStatuesChange(object? statues) => Change(formModel.IncludedStatues, formModel.ExcludedStatues, statues);
 
-    public void ChangeType(DropDownListType dropDownListType, IEnumerable<TypeModel>? types)
+    static void Change<T>(IEnumerable<T> toDisable, IEnumerable<T> toEnable, object? args) where T: IFilterModel
     {
-        var ids = (types ?? Enumerable.Empty<TypeModel>())
-            .Select(type => type.Id)
-            .ToImmutableHashSet();
-
-        var toChange = dropDownListType == DropDownListType.Included
-            ? designer!.ExcludedTypes
-            : designer!.IncludedTypes;
-
-        var toChangeDisable = toChange
-            .Where(t => ids.Contains(t.Id))
-            .Where(t => !t.Disabled);
-
-        foreach (var typeModel in toChangeDisable) typeModel.Disable(true);
-
-        var toChangeEnable = toChange
-            .Where(t => !ids.Contains(t.Id))
-            .Where(t => t.Disabled);
-
-        foreach (var typeModel in toChangeEnable) typeModel.Disable(false);
-    }
-
-    public void ChangeStatus(DropDownListType dropDownListType, IEnumerable<StatusModel>? statues)
-    {
-        var ids = (statues ?? Enumerable.Empty<StatusModel>())
+        var ids = (args as IEnumerable<T> ?? Enumerable.Empty<T>())
             .Select(status => status.Id)
             .ToImmutableHashSet();
 
-        var toChange = dropDownListType == DropDownListType.Included
-            ? designer!.ExcludedStatues
-            : designer!.IncludedStatues;
-
-        var toChangeDisable = toChange
+        var toChangeDisable = toDisable
             .Where(t => ids.Contains(t.Id))
             .Where(t => !t.Disabled);
 
         foreach (var typeModel in toChangeDisable) typeModel.Disable(true);
 
-        var toChangeEnable = toChange
+        var toChangeEnable = toEnable
             .Where(t => !ids.Contains(t.Id))
             .Where(t => t.Disabled);
 
@@ -130,7 +86,7 @@ public partial class FilterForm
 
     async Task OnSubmit()
     {
-        var jql = designer?.ToJql() ?? string.Empty;
+        var jql = formModel?.ToJql() ?? string.Empty;
 
         Query = jql;
         await QueryChanged.InvokeAsync(jql);
