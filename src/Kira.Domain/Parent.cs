@@ -6,7 +6,7 @@ public record Parent
 {
     [JsonPropertyName("id")] public string Id { get; set; } = null!;
 
-    [JsonPropertyName("key")] public string Key { get; set; } = null!;
+    [JsonPropertyName("key")] public string? Key { get; set; } = null!;
 
     [JsonPropertyName("self")] public string Self { get; set; } = null!;
 

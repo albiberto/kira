@@ -1,29 +1,21 @@
 ﻿namespace Kira.Pages;
 
+using Builders;
 using Domain;
+using Extensions;
 using Infrastructure.Clients;
 using Microsoft.AspNetCore.Components;
 using Radzen;
-using Radzen.Blazor;
 
 public partial class Workload
 {
-    static readonly string[] Fields = { "id", "key", "assignee", "reporter", "status", "issuetype", "progress", "parent", "priority", "summary", "labels", "components", "timeoriginalestimate", "timespent", "timeestimate" };
-    int count;
-    RadzenDataGrid<Issue> grid = null!;
-
-    bool isLoading = true;
-    IList<Issue>? issues;
     [Inject] JiraClient Client { get; set; } = null!;
-
-    string Query { get; set; } = string.Empty;
-
-
-    public async Task CallBack(string query)
-    {
-        Query = query;
-        await grid.Reload();
-    }
+    static readonly string[] Fields = { "id", "key", "assignee", "reporter", "customfield_10421", "duedate", "status", "issuetype", "progress", "parent", "priority", "summary", "labels", "components", "timeoriginalestimate", "timespent", "timeestimate" };
+    
+    IList<Issue>? issues;
+    int count;
+    
+    JqlModel Query { get; set; } = new();
 
     async Task LoadData(LoadDataArgs args)
     {
@@ -31,21 +23,21 @@ public partial class Workload
 
         await Task.Yield();
 
-        var result = await Client.PostSearchAsync(Query, Fields);
+        Query = Query with { Order = args.ToOrderClause() };
 
-        // var result = new List<Issue>();
+        var result = Query.Empty
+            ? Enumerable.Empty<Issue>()
+            : await Client.PostSearchAsync(Query.ToJql(), Fields);
 
         issues = result.OrderBy(issue => issue.Fields.Assignee?.EmailAddress ?? "Unassigned").ToList();
         count = issues.Count;
 
         isLoading = false;
     }
-
-    void OnRender(DataGridRenderEventArgs<Issue> args)
+    
+    public async Task QueryChanged(JqlModel query)
     {
-        if (!args.FirstRender) return;
-
-        args.Grid.Groups.Add(new() { Property = "Fields.Assignee.EmailAddress", Title = "Email" });
-        StateHasChanged();
+        Query = query;
+        await grid.Reload();
     }
 }
