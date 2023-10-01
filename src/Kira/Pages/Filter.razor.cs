@@ -16,8 +16,8 @@ public partial class Filter
     [Inject] IOptions<JiraOptions> Options { get; set; } = null!;
     [Inject] NotificationService NotificationService { get; set; } = null!;
 
-    [Parameter] public string Query { get; set; } = string.Empty;
-    [Parameter] public EventCallback<string> QueryChanged { get; set; }
+    [Parameter] public JqlModel Query { get; set; } = new();
+    [Parameter] public EventCallback<JqlModel> QueryChanged { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,10 +86,8 @@ public partial class Filter
 
     async Task OnSubmit()
     {
-        var jql = formModel.ToJql();
-
-        Query = jql;
-        await QueryChanged.InvokeAsync(jql);
+        Query = formModel;
+        await QueryChanged.InvokeAsync(formModel);
 
         NotificationService.Notify(NotificationSeverity.Success, "Success", "Form submitted successfully!");
     }

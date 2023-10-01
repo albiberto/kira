@@ -1,7 +1,7 @@
 ﻿@page "/filter"
 
 
-<RadzenAccordion>
+<RadzenAccordion Style="width: 100%">
     <Items>
         <RadzenAccordionItem Text="Filter" Icon="search" Selected="true">
             <RadzenTemplateForm TItem="FormModel" Data="@formModel" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
@@ -212,6 +212,6 @@
                 </RadzenStack>
             </RadzenTemplateForm>
 
-        </RadzenAccordionItem>
-    </Items>
+</RadzenAccordionItem>
+</Items>
 </RadzenAccordion>

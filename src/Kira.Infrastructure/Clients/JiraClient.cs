@@ -8,13 +8,22 @@ using Microsoft.Extensions.Logging;
 
 public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
 {
-    static JsonSerializerOptions JsonSerializerOptions =>
-        new()
+    static JsonSerializerOptions JsonSerializerOptions
+    {
+        get
         {
-            PropertyNameCaseInsensitive = true,
-            ReferenceHandler = ReferenceHandler.Preserve,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                ReferenceHandler = ReferenceHandler.Preserve,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            // options.Converters.Add(new DateOnlyConverter());
+
+            return options;
+        }
+    }
 
     public async Task<IEnumerable<Project>> GetAllProjects()
     {

@@ -27,7 +27,11 @@ public record Fields
 
     [JsonPropertyName("timeoriginalestimate")] public int? TimeOriginalEstimate { get; set; }
 
-    [JsonPropertyName("timeestimate")] public int? TimeEstimate { get; set; }
+    [JsonPropertyName("timeestimate")] public int? RemainingEstimate { get; set; }
 
     [JsonPropertyName("timespent")] public int? TimeSpent { get; set; }
+
+    [JsonPropertyName("customfield_10421")] public string? StartDate { get; set; }
+
+    [JsonPropertyName("duedate")] public string? DueDate { get; set; }
 }

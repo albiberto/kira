@@ -1,13 +1,10 @@
 ﻿namespace Kira.Builders;
 
 using System.Text;
-using Pages;
 
 public static class JqlBuilder
 {
-    public static string ToJql(this Filter.FormModel model) => InternalToJql(model);
-
-    static string InternalToJql(this JqlModel model)
+    public static string ToJql(this JqlModel model)
     {
         var jqlQueryBuilder = new StringBuilder();
 
@@ -56,33 +53,13 @@ public static class JqlBuilder
             jqlQueryBuilder.Append($"status not in ({string.Join(',', model.ExcludedStatues.Select(s => s.Id))})");
         }
 
+        // Add the sorting clause if it's present
+        if (model.Order.Any())
+        {
+            jqlQueryBuilder.Append(" ORDER BY ");
+            jqlQueryBuilder.Append(string.Join(", ", model.Order.Select(order => $"{order.Field} {order.Order}")));
+        }
+
         return jqlQueryBuilder.ToString();
-    }
-
-    static IEnumerable<(string ProjectId, string Id)> ToTuple(this IEnumerable<Filter.IFilterModel>? model) => model?.Select(m => (m.Project.Id, m.Id)) ?? Enumerable.Empty<(string, string)>();
-
-    public class JqlModel(IEnumerable<string>? projects, IEnumerable<(string ProjectId, string Id)>? includedComponents, IEnumerable<(string ProjectId, string Id)>? excludedComponents, IEnumerable<(string ProjectId, string Id)>? includedTypes, IEnumerable<(string ProjectId, string Id)>? excludedTypes, IEnumerable<(string ProjectId, string Id)>? includedStatues, IEnumerable<(string ProjectId, string Id)>? excludedStatues)
-    {
-        public IEnumerable<string> Projects => projects ?? Enumerable.Empty<string>();
-
-        public IEnumerable<(string ProjectId, string Id)> IncludedComponents => includedComponents ?? Enumerable.Empty<(string ProjectId, string Id)>();
-        public IEnumerable<(string ProjectId, string Id)> ExcludedComponents => excludedComponents ?? Enumerable.Empty<(string ProjectId, string Id)>();
-
-        public IEnumerable<(string ProjectId, string Id)> IncludedTypes => includedTypes ?? Enumerable.Empty<(string ProjectId, string Id)>();
-        public IEnumerable<(string ProjectId, string Id)> ExcludedTypes => excludedTypes ?? Enumerable.Empty<(string ProjectId, string Id)>();
-
-        public IEnumerable<(string ProjectId, string Id)> IncludedStatues => includedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
-        public IEnumerable<(string ProjectId, string Id)> ExcludedStatues => excludedStatues ?? Enumerable.Empty<(string ProjectId, string Id)>();
-
-        public static implicit operator JqlModel(Filter.FormModel formModel) =>
-            new(
-                formModel.SelectedProjects?.Select(project => project.Id),
-                formModel.SelectedIncludedComponents.ToTuple(),
-                formModel.SelectedExcludedComponents.ToTuple(),
-                formModel.SelectedIncludedTypes.ToTuple(),
-                formModel.SelectedExcludedTypes.ToTuple(),
-                formModel.SelectedIncludedStatues.ToTuple(),
-                formModel.SelectedExcludedStatues.ToTuple()
-            );
     }
 }
