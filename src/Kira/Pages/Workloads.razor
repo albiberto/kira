@@ -160,6 +160,9 @@
                 <Template Context="issue">
                     <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Min="0" Max="100" Value="@issue.Progress" ShowValue="false"/>
                 </Template>
+                <FooterTemplate>
+                    Total: <b>@(grid?.View.Count() ?? 0)</b> issues
+                </FooterTemplate>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
