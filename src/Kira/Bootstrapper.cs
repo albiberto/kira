@@ -23,7 +23,7 @@ public static class Bootstrapper
 
     public static void AddKira(this WebApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<JiraAuthInterceptor>();
+        builder.Services.AddScoped<JiraAuthInterceptor>();
         builder.Services
             .AddHttpClient<JiraClient>((services, client) =>
             {
