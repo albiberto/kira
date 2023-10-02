@@ -35,9 +35,9 @@ public partial class Filter
         public IEnumerable<ComponentModel> IncludedComponents => FilterByProject(includedComponents);
         public IEnumerable<ComponentModel> ExcludedComponents => FilterByProject(excludedComponents);
         public IEnumerable<TypeModel> IncludedTypes => FilterByProject(includedTypes);
-        public IEnumerable<TypeModel> ExcludedTypes => FilterByProject(includedTypes);
+        public IEnumerable<TypeModel> ExcludedTypes => FilterByProject(excludedTypes);
         public IEnumerable<StatusModel> IncludedStatues => FilterByProject(includedStatues);
-        public IEnumerable<StatusModel> ExcludedStatues => FilterByProject(includedStatues);
+        public IEnumerable<StatusModel> ExcludedStatues => FilterByProject(excludedStatues);
 
         public void Initialize(Defaults defaults)
         {
