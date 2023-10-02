@@ -13,5 +13,5 @@ public static class StatusExtensions
             _ => BadgeStyle.Dark
         };
 
-    public static double ToDouble(this int? value) => value ?? 0;
+    public static double ToDouble(this int? value) => value ?? -1;
 }

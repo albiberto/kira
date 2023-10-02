@@ -20,7 +20,7 @@ public record Fields
 
     [JsonPropertyName("status")] public Status Status { get; set; } = new();
 
-    [JsonPropertyName("parent")] public Parent Parent { get; set; } = new();
+    [JsonPropertyName("parent")] public Parent? Parent { get; set; } = new();
 
     [JsonPropertyName("progress")] public IssueProgress Progress { get; set; } = new();
 

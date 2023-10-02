@@ -7,14 +7,15 @@ using Infrastructure.Clients;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 
-public partial class Workload
+public partial class Workloads
 {
-    [Inject] JiraClient Client { get; set; } = null!;
     static readonly string[] Fields = { "id", "key", "assignee", "reporter", "customfield_10421", "duedate", "status", "issuetype", "progress", "parent", "priority", "summary", "labels", "components", "timeoriginalestimate", "timespent", "timeestimate" };
-    
-    IList<Issue>? issues;
+
+    [Inject] JiraClient Client { get; set; } = null!;
+
+    IList<Model>? issues;
     int count;
-    
+
     JqlModel Query { get; set; } = new();
 
     async Task LoadData(LoadDataArgs args)
@@ -23,21 +24,21 @@ public partial class Workload
 
         await Task.Yield();
 
-        Query = Query with { Order = args.ToOrderClause() };
+        Query = Query with { Order = args.ToOrderClause("Assignee") };
 
         var result = Query.Empty
             ? Enumerable.Empty<Issue>()
             : await Client.PostSearchAsync(Query.ToJql(), Fields);
 
-        issues = result.OrderBy(issue => issue.Fields.Assignee?.EmailAddress ?? "Unassigned").ToList();
+        issues = result.Select(model => new Model(model)).ToList();
         count = issues.Count;
 
         isLoading = false;
     }
-    
+
     public async Task QueryChanged(JqlModel query)
     {
         Query = query;
-        await grid.Reload();
+        if (grid is not null) await grid.Reload();
     }
 }

@@ -1,7 +1,4 @@
-﻿@page "/filter"
-
-
-<RadzenAccordion Style="width: 100%">
+﻿<RadzenAccordion Style="width: 100%">
     <Items>
         <RadzenAccordionItem Text="Filter" Icon="search" Selected="true">
             <RadzenTemplateForm TItem="FormModel" Data="@formModel" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
@@ -198,7 +195,7 @@
                         <RadzenCheckBox TriState="false" @bind-Value="popup" Name="PopUp"/>
                         <RadzenLabel Text="Popup" Component="Popup" Style="margin-left: 8px; vertical-align: middle;"/>
                     </div>
-                    <RadzenButton Disabled="@(isLoading || !LeftBound() || !RightBound())" ButtonType="ButtonType.Submit" Size="ButtonSize.Large" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Lighter" Variant="Variant.Outlined" Icon="search" Text="Search"/>
+                    <RadzenButton Disabled="@(isLoading || !LeftBound() || !RightBound())" ButtonType="ButtonType.Submit" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Lighter" Variant="Variant.Outlined" Icon="search" Text="Search"/>
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Class="rz-mt-2 rz-mb-2">
                     @if (isLoading)
@@ -212,6 +209,6 @@
                 </RadzenStack>
             </RadzenTemplateForm>
 
-</RadzenAccordionItem>
-</Items>
+        </RadzenAccordionItem>
+    </Items>
 </RadzenAccordion>
