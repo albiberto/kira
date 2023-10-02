@@ -48,7 +48,10 @@
             <DependentUpon>Filter.razor</DependentUpon>
         </Compile>
         <Compile Update="Pages\Workflow.designer.razor.cs">
-          <DependentUpon>Workload.razor</DependentUpon>
+            <DependentUpon>Workloads.razor</DependentUpon>
+        </Compile>
+        <Compile Update="Pages\Workloads.model.razor.cs">
+            <DependentUpon>Workloads.razor</DependentUpon>
         </Compile>
     </ItemGroup>
 
