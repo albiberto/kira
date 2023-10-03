@@ -41,5 +41,7 @@ public partial class Workloads
 
         public string? ParentPriority { get; } = issue.Fields.Parent?.Fields.Priority.Name;
         public string? ParentPriorityIcon { get; } = issue.Fields.Parent?.Fields.Priority.IconUrl;
+
+        public string Components { get; } = string.Join(", ", issue.Fields.Components.Select(component => component.Name).OrderBy(component => component));
     }
 }

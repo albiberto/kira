@@ -1,5 +1,7 @@
 ﻿namespace Kira.Pages;
 
+using System.Collections;
+using Extensions;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
@@ -29,4 +31,6 @@ public partial class Workloads
     }
 
     void OnGroupRowRender(GroupRowRenderEventArgs args) => args.Expanded = allGroupsExpanded;
+
+    static string ToWorkingHoursDaysMinutes(IEnumerable items) => items.Cast<Model>().Sum(o => o.RemainingEstimate).ToWorkingDaysHoursMinutes();
 }

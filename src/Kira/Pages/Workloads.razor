@@ -44,7 +44,7 @@
 
         <Columns>
 
-            <RadzenDataGridColumn TItem="Model" SortProperty="Type" Property="ParentType" Title="Type" Width="90px;">
+            <RadzenDataGridColumn TItem="Model" SortProperty="Type" Property="Type" Title="Type" Width="90px;">
                 <Template Context="issue">
                     <RadzenImage Path="@issue.TypeIcon" class="icon"/>
                     @if (!string.IsNullOrEmpty(issue.ParentTypeIcon))
@@ -101,6 +101,12 @@
                     <RadzenText Text="@issue.Summary" MouseEnter="@(args => ShowTooltip(args, @issue.Summary))"></RadzenText>
                 </Template>
             </RadzenDataGridColumn>
+            
+            <RadzenDataGridColumn TItem="Model" Property="Components" Title="Components" Sortable="false" MinWidth="300px" Groupable="false">
+                <Template Context="issue">
+                    <RadzenText Text="@issue.Components" MouseEnter="@(args => ShowTooltip(args, @issue.Components))"></RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="Model" SortProperty="Status" Property="Status" Title="Status" Width="130px;">
                 <Template Context="issue">
@@ -125,10 +131,10 @@
                     <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()"/>
                 </Template>
                 <FooterTemplate>
-                    <b>@(issues?.Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</b>
+                    <strong>@(issues?.Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</strong>
                 </FooterTemplate>
                 <GroupFooterTemplate>
-                    <b>@(context.Data.Items.Cast<Model>().Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</b>
+                    <strong>@(context.Data.Items.Cast<Model>().Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</strong>
                 </GroupFooterTemplate>
             </RadzenDataGridColumn>
 
@@ -137,10 +143,10 @@
                     <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.TimeSpent.ToWorkingDaysHoursMinutes()"/>
                 </Template>
                 <FooterTemplate>
-                    <b>@(issues?.Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</b>
+                    <strong>@(issues?.Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</strong>
                 </FooterTemplate>
                 <GroupFooterTemplate>
-                    <b>@(context.Data.Items.Cast<Model>().Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</b>
+                    <strong>@(context.Data.Items.Cast<Model>().Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</strong>
                 </GroupFooterTemplate>
             </RadzenDataGridColumn>
 
@@ -149,10 +155,10 @@
                     <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.RemainingEstimate.ToWorkingDaysHoursMinutes()"/>
                 </Template>
                 <FooterTemplate>
-                    <b>@(issues?.Sum(o => o.RemainingEstimate).ToWorkingDaysHoursMinutes())</b>
+                    <strong>@(issues?.Sum(o => o.RemainingEstimate).ToWorkingDaysHoursMinutes())</strong>
                 </FooterTemplate>
                 <GroupFooterTemplate>
-                    <b>@(context.Data.Items.Cast<Model>().Sum(o => o.RemainingEstimate).ToWorkingDaysHoursMinutes())</b>
+                    <strong class="rz-color-secondary">@(context.Data.Items.Cast<Model>().Sum(model => model.RemainingEstimate).ToWorkingDaysHoursMinutes())</strong>
                 </GroupFooterTemplate>
             </RadzenDataGridColumn>
 
