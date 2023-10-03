@@ -22,11 +22,12 @@ public partial class Workloads
         public int? RemainingEstimate { get; } = issue.Fields.RemainingEstimate;
         public double Progress { get; } = issue.Fields.Progress.Percent.ToDouble();
 
-        public string Type { get; } = new(issue.Fields.Type.Name);
-        public string TypeIcon { get; } = new(issue.Fields.Type.IconUrl);
+        public string Type { get; } = issue.Fields.Type.Name;
+        public string TypeIcon { get; } = issue.Fields.Type.IconUrl;
+        public bool IsSubTask { get; } = issue.Fields.Type.Subtask;
 
-        public string Priority { get; } = new(issue.Fields.Priority.Name);
-        public string PriorityIcon { get; } = new(issue.Fields.Priority.IconUrl);
+        public string Priority { get; } = issue.Fields.Priority.Name;
+        public string PriorityIcon { get; } = issue.Fields.Priority.IconUrl;
 
         public string Assignee { get; } = issue.Fields.Assignee?.DisplayName ?? "Unassigned";
         public string? AssigneeAvatar { get; } = issue.Fields.Assignee?.AvatarUrls._16x16;

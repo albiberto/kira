@@ -47,21 +47,21 @@
 
             <RadzenDataGridColumn TItem="Model" SortProperty="Type" Property="Type" Title="Type" Width="90px;">
                 <Template Context="issue">
-                    <RadzenImage Path="@issue.TypeIcon" class="icon"/>
                     @if (!string.IsNullOrEmpty(issue.ParentTypeIcon))
                     {
-                        <RadzenImage Path="@issue.ParentTypeIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Parent"))"/>
+                        <RadzenImage Path="@issue.ParentTypeIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Issue Type"))"/>
                     }
+                    <RadzenImage Path="@issue.TypeIcon" class="icon" MouseEnter="@(args => ShowTooltip(args,  issue.IsSubTask ? "Sub-Task Type" : "Issue Type"))"/>
                 </Template>
             </RadzenDataGridColumn>
 
             <RadzenDataGridColumn TItem="Model" SortProperty="Priority" Property="Priority" Title="Priority" Width="90px;">
                 <Template Context="issue">
-                    <RadzenImage Path="@issue.PriorityIcon" class="icon"/>
                     @if (!string.IsNullOrEmpty(issue.ParentPriorityIcon))
                     {
-                        <RadzenImage Path="@issue.ParentPriorityIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Parent"))"/>
+                        <RadzenImage Path="@issue.ParentPriorityIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Issue Priority"))"/>
                     }
+                    <RadzenImage Path="@issue.PriorityIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, issue.IsSubTask ? "Sub-Task Priority" : "Issue Priority"))"/>
                 </Template>
             </RadzenDataGridColumn>
 
@@ -85,15 +85,25 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="ParentKey" Title="Parent" Width="110px;" Sortable="false" Groupable="false">
+            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="ParentKey" Title="Issue" Width="110px;" Sortable="false" Groupable="false">
                 <Template Context="issue">
-                    <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/>
+                    @if (!issue.IsSubTask)
+                    {
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                    }
+                    else
+                    {
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/>
+                    }
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="Key" Title="Key" Width="110px;" Groupable="false">
+            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="Key" Title="Sub-Task" Width="110px;" Groupable="false">
                 <Template Context="issue">
-                    <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                    @if (issue.IsSubTask)
+                    {
+                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                    }
                 </Template>
             </RadzenDataGridColumn>
 
