@@ -1,4 +1,5 @@
-﻿<RadzenAccordion Style="width: 100%">
+﻿@using Kira.Builders
+<RadzenAccordion Style="width: 100%">
     <Items>
         <RadzenAccordionItem Text="Filter" Icon="search" Selected="true">
             <RadzenTemplateForm TItem="FormModel" Data="@formModel" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
@@ -83,6 +84,14 @@
                                             </RadzenDropDown>
                                         </RadzenColumn>
                                     </RadzenRow>
+                                    <RadzenRow AlignItems="AlignItems.Center">
+                                    <RadzenColumn Size="12" SizeMD="2">
+                                        <RadzenLabel Text="Is Empty"/>
+                                    </RadzenColumn>
+                                    <RadzenColumn Size="12" SizeMD="10">
+                                        <RadzenCheckBox TValue="bool?" TriState="true" @bind-Value="formModel.EmptyComponents"/>
+                                    </RadzenColumn>
+                                </RadzenRow>
                                 </RadzenStack>
                             </RadzenFieldset>
                         </RadzenStack>
@@ -197,16 +206,20 @@
                     </div>
                     <RadzenButton Disabled="@(isLoading || !LeftBound() || !RightBound())" ButtonType="ButtonType.Submit" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Lighter" Variant="Variant.Outlined" Icon="search" Text="Search"/>
                 </RadzenStack>
-                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Class="rz-mt-2 rz-mb-2">
-                    @if (isLoading)
-                    {
-                        <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Warning" IsPill="true" Text="Loading ..." class="rz-ml-2"/>
-                    }
-                    else
-                    {
-                        <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Success" IsPill="true" Text="Loaded" class="rz-ml-2"/>
-                    }
-                </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Class="rz-mt-2 rz-mb-2">
+                <div>
+                    <strong>Query: </strong>
+                    <RadzenBadge BadgeStyle="BadgeStyle.Dark" Shade="Shade.Light" Variant="Variant.Text" Text="@(((JqlModel) formModel).ToJql())"></RadzenBadge>
+                </div>
+                @if (isLoading)
+                {
+                    <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Warning" IsPill="true" Text="Loading ..." class="rz-ml-2"/>
+                }
+                else
+                {
+                    <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Success" IsPill="true" Text="Loaded" class="rz-ml-2"/>
+                }
+            </RadzenStack>
             </RadzenTemplateForm>
 
         </RadzenAccordionItem>
