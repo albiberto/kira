@@ -8,6 +8,7 @@ public partial class Workloads
 {
     public class Model(Issue issue)
     {
+        public string GroupKey => IsSubTask ? ParentKey ?? string.Empty : Key;
         public string Key { get; } = issue.Key;
         public string Summary { get; } = issue.Fields.Summary;
 
