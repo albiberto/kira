@@ -26,6 +26,7 @@ public partial class Filter
         public List<ProjectModel>? SelectedProjects { get; set; }
         public List<ComponentModel>? SelectedIncludedComponents { get; set; }
         public List<ComponentModel>? SelectedExcludedComponents { get; set; }
+        public bool? EmptyComponents { get; set; }
         public List<TypeModel>? SelectedIncludedTypes { get; set; }
         public List<TypeModel>? SelectedExcludedTypes { get; set; }
         public List<StatusModel>? SelectedIncludedStatues { get; set; }
@@ -52,6 +53,7 @@ public partial class Filter
             SelectedProjects = selectedProjects;
             SelectedIncludedComponents = selectedIncludedComponents;
             SelectedExcludedComponents = selectedExcludedComponents;
+            EmptyComponents = defaults.EmptyComponents;
             SelectedIncludedTypes = selectedIncludedTypes;
             SelectedExcludedTypes = selectedExcludedTypes;
             SelectedIncludedStatues = selectedIncludedStatues;

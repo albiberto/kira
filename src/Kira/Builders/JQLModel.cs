@@ -4,7 +4,7 @@ using Extensions;
 using Pages;
 
 public record JqlModel(IEnumerable<string>? Projects = default,
-    IEnumerable<(string ProjectId, string Id)>? IncludedComponents = default, IEnumerable<(string ProjectId, string Id)>? ExcludedComponents = default,
+    IEnumerable<(string ProjectId, string Id)>? IncludedComponents = default, IEnumerable<(string ProjectId, string Id)>? ExcludedComponents = default, bool? EmptyComponents = true,
     IEnumerable<(string ProjectId, string Id)>? IncludedTypes = default, IEnumerable<(string ProjectId, string Id)>? ExcludedTypes = default,
     IEnumerable<(string ProjectId, string Id)>? IncludedStatues = default, IEnumerable<(string ProjectId, string Id)>? ExcludedStatues = default,
     IEnumerable<(string Field, string Order)>? Order = default)
@@ -29,6 +29,7 @@ public record JqlModel(IEnumerable<string>? Projects = default,
             formModel.SelectedProjects?.Select(project => project.Id),
             formModel.SelectedIncludedComponents.ToTuple(),
             formModel.SelectedExcludedComponents.ToTuple(),
+            formModel.EmptyComponents,
             formModel.SelectedIncludedTypes.ToTuple(),
             formModel.SelectedExcludedTypes.ToTuple(),
             formModel.SelectedIncludedStatues.ToTuple(),

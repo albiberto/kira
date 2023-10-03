@@ -21,6 +21,7 @@ public class Defaults
     [Required] public HashSet<string> Projects { get; set; } = new();
     [Required] public HashSet<string> IncludedComponents { get; set; } = new();
     [Required] public HashSet<string> ExcludedComponents { get; set; } = new();
+    public bool EmptyComponents { get; set; }
     [Required] public HashSet<string> IncludedTypes { get; set; } = new();
     [Required] public HashSet<string> ExcludedTypes { get; set; } = new();
     [Required] public HashSet<string> IncludedStatues { get; set; } = new();
