@@ -85,7 +85,7 @@
                 </Template>
             </RadzenDataGridColumn>
 
-            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="ParentKey" Title="Issue" Width="110px;" Sortable="false" Groupable="false">
+            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="GroupKey" Title="Issue" Width="110px;" Sortable="false">
                 <Template Context="issue">
                     @if (!issue.IsSubTask)
                     {
