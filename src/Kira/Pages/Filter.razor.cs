@@ -56,32 +56,32 @@ public partial class Filter
         formModel.ClearSelected(projects);
     }
 
-    void IncludedComponentsChange(object? args) => Change(formModel.ExcludedComponents, formModel.IncludedComponents, args);
-    void ExcludedComponentsChange(object? args) => Change(formModel.IncludedComponents, formModel.ExcludedComponents, args);
+    void IncludedComponentsChange(object? args) => Change(args, formModel.ExcludedComponents);
+    void ExcludedComponentsChange(object? args) => Change(args, formModel.IncludedComponents);
 
-    void IncludedTypesChange(object? args) => Change(formModel.ExcludedTypes, formModel.IncludedTypes, args);
-    void ExcludedTypesChange(object? args) => Change(formModel.IncludedTypes, formModel.ExcludedTypes, args);
+    void IncludedTypesChange(object? args) => Change(args, formModel.ExcludedTypes);
+    void ExcludedTypesChange(object? args) => Change(args, formModel.IncludedTypes);
 
-    void IncludedStatuesChange(object? statues) => Change(formModel.ExcludedStatues, formModel.IncludedStatues, statues);
-    void ExcludedStatuesChange(object? statues) => Change(formModel.IncludedStatues, formModel.ExcludedStatues, statues);
+    void IncludedStatuesChange(object? args) => Change(args, formModel.ExcludedStatues);
+    void ExcludedStatuesChange(object? args) => Change(args, formModel.IncludedStatues);
 
-    static void Change<T>(IEnumerable<T> toDisable, IEnumerable<T> toEnable, object? args) where T : IFilterModel
+    static void Change<T>(
+        object? changedSelection, IEnumerable<T> listToUpdate
+        ) where T : IFilterModel
     {
-        var ids = (args as IEnumerable<T> ?? Enumerable.Empty<T>())
-            .Select(status => status.Id)
+        //These are all the selected IDs in the list that just changed, so they should be disabled in the other list
+        var idsThatShouldBeDisabled = (changedSelection as IEnumerable<T> ?? Enumerable.Empty<T>())
+            .Select(x => x.Id)
             .ToImmutableHashSet();
 
-        var toChangeDisable = toDisable
-            .Where(t => ids.Contains(t.Id))
-            .Where(t => !t.Disabled);
-
-        foreach (var typeModel in toChangeDisable) typeModel.Disable(true);
-
-        var toChangeEnable = toEnable
-            .Where(t => !ids.Contains(t.Id))
-            .Where(t => t.Disabled);
-
-        foreach (var typeModel in toChangeEnable) typeModel.Disable(false);
+        foreach (var typeModel in listToUpdate)
+        {
+            if (idsThatShouldBeDisabled.Contains(typeModel.Id))
+                typeModel.Disable(true);
+            else
+                //All IDs that are not selected in one list should be enabled in the other
+                typeModel.Disable(false);
+        }
     }
 
     async Task OnSubmit()
