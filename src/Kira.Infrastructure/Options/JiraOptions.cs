@@ -2,6 +2,21 @@ namespace Kira.Infrastructure.Options;
 
 using System.ComponentModel.DataAnnotations;
 
+public class BoardOptions
+{
+    public class My
+    {
+        [Required] public AuthOptions Auth { get; set; } = null!;
+        [Required] public JiraOptions Jira { get; set; } = null!;
+    }
+
+    public class Customer
+    {
+        [Required] public AuthOptions Auth { get; set; } = null!;
+        [Required] public JiraOptions Jira { get; set; } = null!;
+    }
+}
+
 public class AuthOptions
 {
     [Required, MinLength(10)] public string Username { get; set; } = null!;

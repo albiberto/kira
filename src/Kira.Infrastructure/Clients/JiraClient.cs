@@ -6,8 +6,11 @@ using System.Text.Json.Serialization;
 using Domain;
 using Microsoft.Extensions.Logging;
 
-public class JiraClient(HttpClient http, ILogger<JiraClient> logger)
+public abstract class JiraClient(HttpClient http, ILogger<JiraClient> logger)
 {
+    public class Customer(IHttpClientFactory factory, ILogger<JiraClient> logger) : JiraClient(factory.CreateClient("Customer"), logger);
+    public class My(IHttpClientFactory factory, ILogger<JiraClient> logger) : JiraClient(factory.CreateClient("My"), logger);
+
     static JsonSerializerOptions JsonSerializerOptions
     {
         get

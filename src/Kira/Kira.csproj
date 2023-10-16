@@ -53,6 +53,12 @@
         <Compile Update="Pages\Workloads.model.razor.cs">
             <DependentUpon>Workloads.razor</DependentUpon>
         </Compile>
+        <Compile Update="Pages\Rosetta.desginer.razor.cs">
+          <DependentUpon>Rosetta.razor</DependentUpon>
+        </Compile>
+        <Compile Update="Pages\Rosetta.model.razor.cs">
+          <DependentUpon>Rosetta.razor</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,21 @@
+﻿@page "/Rosetta"
+
+@if (selectedValue)
+{
+    <Filter Query=Query QueryChanged=QueryChanged Client="MyClient" Options="MyOptions.Value.Jira"/>
+}
+else
+{
+    <Filter Query=Query QueryChanged=QueryChanged Client="CustomerClient" Options="CustomerOptions.Value.Jira"/>
+}
+
+<RadzenCard class="my-2">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+            <RadzenDropDown @ref="ddl" @bind-Value=@SelectedOption Data=@Options Style="width: 100%; max-width: 400px;" TextProperty="Name" Change="DropDownChange" />
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
+            <RadzenSwitch @bind-Value=@selectedValue Change="SwitchChange"/>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>

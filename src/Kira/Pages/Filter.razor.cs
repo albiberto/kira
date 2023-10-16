@@ -12,21 +12,21 @@ public partial class Filter
 {
     readonly HashSet<string> evaluatedProjects = new();
 
-    [Inject] JiraClient Client { get; set; } = null!;
-    [Inject] IOptions<JiraOptions> Options { get; set; } = null!;
     [Inject] NotificationService NotificationService { get; set; } = null!;
 
     [Parameter] public JqlModel Query { get; set; } = new();
     [Parameter] public EventCallback<JqlModel> QueryChanged { get; set; }
-
+    [Parameter] public JiraOptions Options { get; set; } = null!;
+    [Parameter] public JiraClient Client { get; set; } = null!;
+    
     protected override async Task OnInitializedAsync()
     {
         var projects = (await Client.GetAllProjects()).ToList();
         formModel = new(projects);
 
-        await LoadProjectAsync(formModel.Projects.Where(project => Options.Value.Defaults.Projects.Contains(project.Id)));
+        await LoadProjectAsync(formModel.Projects.Where(project => Options.Defaults.Projects.Contains(project.Id)));
 
-        formModel.Initialize(Options.Value.Defaults);
+        formModel.Initialize(Options.Defaults);
     }
 
     async Task LoadProjectAsync(IEnumerable<ProjectModel>? projects)

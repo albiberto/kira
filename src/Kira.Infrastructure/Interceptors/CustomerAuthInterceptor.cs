@@ -4,13 +4,13 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Options;
 
-public class JiraAuthInterceptor : DelegatingHandler
+public class CustomerAuthInterceptor : DelegatingHandler
 {
     readonly string credentials;
 
-    public JiraAuthInterceptor(IOptions<AuthOptions> options)
+    public CustomerAuthInterceptor(IOptions<BoardOptions.Customer> options)
     {
-        var login = $"{options.Value.Username}:{options.Value.Password}";
+        var login = $"{options.Value.Auth.Username}:{options.Value.Auth.Password}";
         credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(login));
     }
 
