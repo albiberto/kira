@@ -1,7 +1,12 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Filters;
+
+using Microsoft.AspNetCore.Components;
+using Radzen;
 
 public partial class Filter
 {
+    [Inject] NotificationService NotificationService { get; set; } = null!;
+
     FormModel formModel = new();
     bool isLoading = true;
     bool popup;

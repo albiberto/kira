@@ -1,4 +1,4 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Workloads;
 
 using System.Collections;
 using Extensions;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 
-public partial class Workloads
+public partial class Company2
 {
     bool? allGroupsExpanded;
 
@@ -24,11 +24,6 @@ public partial class Workloads
     }
 
     void ShowTooltip(ElementReference elementReference, string text, TooltipOptions? options = default) => TooltipService.Open(elementReference, text, options);
-
-    void ToggleGroups(bool? value)
-    {
-        allGroupsExpanded = value;
-    }
 
     void OnGroupRowRender(GroupRowRenderEventArgs args) => args.Expanded = allGroupsExpanded;
 

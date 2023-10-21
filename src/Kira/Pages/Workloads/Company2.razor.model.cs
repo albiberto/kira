@@ -1,10 +1,10 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Workloads;
 
 using Domain;
 using Extensions;
 using Radzen;
 
-public partial class CustomerWorkloads
+public partial class Company2
 {
     public class Model(Issue issue)
     {

@@ -1,0 +1,12 @@
+<RadzenCard class="my-2">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+            <RadzenCheckBox TriState="true" TValue="bool?" @bind-Value="@Value" Name="allGroupsExpanded" Change="@ToggleGroups"/>
+            <RadzenLabel Text="All groups expanded by default" Component="allGroupsExpanded" Style="margin-left: 8px; margin-right: 32px; vertical-align: middle;"/>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
+            <RadzenButton Text="Expand" Click="@(_ => ToggleGroups(true))" style="margin-right: 16px" Disabled=@(Value == true) Size="ButtonSize.ExtraSmall"/>
+            <RadzenButton Text="Collapse" Click="@(_ => ToggleGroups(false))" Disabled=@(Value == false) Size="ButtonSize.ExtraSmall"/>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>

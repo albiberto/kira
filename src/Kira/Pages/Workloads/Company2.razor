@@ -1,0 +1,110 @@
+﻿@page "/companies/company2"
+
+@using Kira.Pages.Filters
+
+<Accordion>
+    <Filter Query="Query" QueryChanged="QueryChanged" Jira="jira" Default="options.Defaults"></Filter>
+</Accordion>
+
+@if (Query.Empty)
+{
+    return;
+}
+
+<Collapse @bind-Value="allGroupsExpanded"/>
+
+<RadzenStack class="rz-mt-4">
+    <RadzenDataGrid @ref="grid"
+                    TItem="Model"
+                    Data="@issues" LoadData="LoadData" Count="count" IsLoading="isLoading"
+                    AllowGrouping="true"
+                    AllowFiltering="false"
+                    AllowColumnResize="true"
+                    AllowPaging="false"
+                    GroupRowRender="OnGroupRowRender"
+                    @bind-AllGroupsExpanded="@allGroupsExpanded"
+                    AllowSorting="true"
+                    Render="@OnRender"
+                    style="max-height: calc(100vh - 325px)">
+
+        <GroupHeaderTemplate>
+            @context.GroupDescriptor.GetTitle(): @(context.Data.Key)
+        </GroupHeaderTemplate>
+
+        <Columns>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Type" Property="Type" Title="Type" Width="90px;">
+                <Template Context="issue">
+                    @if (!string.IsNullOrEmpty(issue.ParentTypeIcon))
+                    {
+                        <RadzenImage Path="@issue.ParentTypeIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Issue Type"))"/>
+                    }
+                    <RadzenImage Path="@issue.TypeIcon" class="icon" MouseEnter="@(args => ShowTooltip(args,  issue.IsSubTask ? "Sub-Task Type" : "Issue Type"))"/>
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Priority" Property="Priority" Title="Priority" Width="90px;">
+                <Template Context="issue">
+                    @if (!string.IsNullOrEmpty(issue.ParentPriorityIcon))
+                    {
+                        <RadzenImage Path="@issue.ParentPriorityIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, "Issue Priority"))"/>
+                    }
+                    <RadzenImage Path="@issue.PriorityIcon" class="icon" MouseEnter="@(args => ShowTooltip(args, issue.IsSubTask ? "Sub-Task Priority" : "Issue Priority"))"/>
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Assignee" Property="Assignee" Title="Assignee" Width="175px;">
+                <Template Context="issue">
+                    @if (!string.IsNullOrEmpty(issue.AssigneeAvatar))
+                    {
+                        <RadzenImage Path="@issue.AssigneeAvatar" class="icon"/>
+                    }
+                    @issue.Assignee
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Reporter" Property="Reporter" Title="Reporter" Width="175px;">
+                <Template Context="issue">
+                    @if (!string.IsNullOrEmpty(issue.ReporterAvatar))
+                    {
+                        <RadzenImage Path="@issue.ReporterAvatar" class="icon"/>
+                    }
+                    @issue.Reporter
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Key" Property="GroupKey" Title="Issue" Width="110px;" Sortable="false">
+                <Template Context="issue">
+                    @if (!issue.IsSubTask)
+                    {
+                        <RadzenLink Path=@($"{options.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                    }
+                    else
+                    {
+                        <RadzenLink Path=@($"{options.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/>
+                    }
+                </Template>
+            </RadzenDataGridColumn>
+            
+
+            <RadzenDataGridColumn TItem="Model" Property="Summary" Title="Summary" Sortable="false" MinWidth="300px" Groupable="false">
+                <Template Context="issue">
+                    <RadzenText Text="@issue.Summary" MouseEnter="@(args => ShowTooltip(args, @issue.Summary))"></RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            
+            <RadzenDataGridColumn TItem="Model" Property="Components" Title="Components" Sortable="false" MinWidth="300px" Groupable="false">
+                <Template Context="issue">
+                    <RadzenText Text="@issue.Components" MouseEnter="@(args => ShowTooltip(args, @issue.Components))"></RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="Model" SortProperty="Status" Property="Status" Title="Status" Width="130px;">
+                <Template Context="issue">
+                    <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@issue.StatusColor Text="@issue.Status"/>
+                </Template>
+            </RadzenDataGridColumn>
+            
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>

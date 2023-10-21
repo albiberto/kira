@@ -1,4 +1,4 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Filters;
 
 using System.Collections.Immutable;
 using Domain;
@@ -40,20 +40,20 @@ public partial class Filter
         public IEnumerable<StatusModel> IncludedStatues => FilterByProject(includedStatues);
         public IEnumerable<StatusModel> ExcludedStatues => FilterByProject(excludedStatues);
 
-        public void Initialize(Defaults defaults)
+        public void Initialize(DefaultOptions defaultOptions)
         {
-            var selectedProjects = projects.Where(project => defaults.Projects.Contains(project.Id)).ToList();
-            var selectedIncludedComponents = includedComponents.Where(project => defaults.IncludedComponents.Contains(project.Id)).ToList();
-            var selectedExcludedComponents = excludedComponents.Where(project => defaults.ExcludedComponents.Contains(project.Id)).ToList();
-            var selectedIncludedTypes = includedTypes.Where(project => defaults.IncludedTypes.Contains(project.Id)).ToList();
-            var selectedExcludedTypes = excludedTypes.Where(project => defaults.ExcludedTypes.Contains(project.Id)).ToList();
-            var selectedIncludedStatues = includedStatues.Where(project => defaults.IncludedStatues.Contains(project.Id)).ToList();
-            var selectedExcludedStatues = excludedStatues.Where(project => defaults.ExcludedStatues.Contains(project.Id)).ToList();
+            var selectedProjects = projects.Where(project => defaultOptions.Projects.Contains(project.Id)).ToList();
+            var selectedIncludedComponents = includedComponents.Where(project => defaultOptions.IncludedComponents.Contains(project.Id)).ToList();
+            var selectedExcludedComponents = excludedComponents.Where(project => defaultOptions.ExcludedComponents.Contains(project.Id)).ToList();
+            var selectedIncludedTypes = includedTypes.Where(project => defaultOptions.IncludedTypes.Contains(project.Id)).ToList();
+            var selectedExcludedTypes = excludedTypes.Where(project => defaultOptions.ExcludedTypes.Contains(project.Id)).ToList();
+            var selectedIncludedStatues = includedStatues.Where(project => defaultOptions.IncludedStatues.Contains(project.Id)).ToList();
+            var selectedExcludedStatues = excludedStatues.Where(project => defaultOptions.ExcludedStatues.Contains(project.Id)).ToList();
 
             SelectedProjects = selectedProjects;
             SelectedIncludedComponents = selectedIncludedComponents;
             SelectedExcludedComponents = selectedExcludedComponents;
-            EmptyComponents = defaults.EmptyComponents;
+            EmptyComponents = defaultOptions.EmptyComponents;
             SelectedIncludedTypes = selectedIncludedTypes;
             SelectedExcludedTypes = selectedExcludedTypes;
             SelectedIncludedStatues = selectedIncludedStatues;

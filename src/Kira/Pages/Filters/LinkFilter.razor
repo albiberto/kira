@@ -1,0 +1,32 @@
+@page "/switch-filter"
+@using Kira.Infrastructure.Services
+
+<RadzenCard class="my-2" Variant="Variant.Outlined">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+        
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+            <RadzenDropDown @ref="left" 
+                            Data="LeftOptions" 
+                            @bind-Value="@SelectedLeftOption" 
+                            DisabledProperty="Disabled" 
+                            TextProperty="Value" 
+                            ValueProperty="Key" 
+                            Change="SelectedLeftOptionChanged"
+                            Style="width: 100%; max-width: 400px;" />
+        </RadzenStack>
+        
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
+            <RadzenDropDown @ref="right" 
+                            Data="RightOptions" 
+                            @bind-Value="@SelectedRightOption" 
+                            DisabledProperty="Disabled" 
+                            TextProperty="Value" 
+                            ValueProperty="Key" 
+                            Change="SelectedRightOptionChanged"
+                            Style="width: 100%; max-width: 400px;" />
+        </RadzenStack>
+        
+    </RadzenStack>
+</RadzenCard>
+
+<Filter Query="Query" QueryChanged="QueryChanged" Jira="Provider.GetKeyedService<JiraService>(SelectedLeftOption)" Default="Options.Get(SelectedLeftOption).Jira.Defaults" />
