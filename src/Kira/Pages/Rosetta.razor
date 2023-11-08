@@ -1,0 +1,130 @@
+@page "/Rosetta"
+@using Kira.Extensions
+@using Kira.Pages.Filters
+
+<Accordion>
+    <LinkFilter @bind-LeftKey="LeftKey" @bind-RightKey="RightKey" Query="Query" QueryChanged="QueryChanged" />
+</Accordion>
+
+@if(string.IsNullOrEmpty(LeftKey) || string.IsNullOrEmpty(RightKey) || (Query?.Empty ?? true))
+{
+    return;
+}
+
+<Collapse @bind-Value="allGroupsExpanded"/> 
+
+<RadzenStack class="rz-mt-4">
+<RadzenDataGrid @ref="grid" AllowFiltering="false" AllowSorting="true" RowRender="@RowRender" ExpandMode="DataGridExpandMode.Multiple"
+                LoadData="LoadData" Count="count" Data="@issues" TItem="LeftModel" IsLoading="isLoading">
+
+        <Template Context="order">
+            <RadzenDataGrid AllowFiltering="false" AllowPaging="false" AllowSorting="true" Data="@order.Issues" TItem="RightModel">
+                <Columns>
+                    <RadzenDataGridColumn TItem="RightModel" Property="Key" Title="Key" Width="200px">
+                        <Template Context="issue">
+                            @if (issue.IsSubType)
+                            {
+                                <RadzenLink Path=@($"{CompanyOptions.Get(RightKey).Jira.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/><span>&nbsp;|&nbsp;</span>
+                            }
+                            
+                            <RadzenLink Path=@($"{CompanyOptions.Get(RightKey).Jira.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                        
+                            </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="RightModel" Property="Summary" Title="Summary" />
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="Status" Property="MyStatus" Title="Status" Width="130px;">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@issue.StatusColor Text="@issue.Status"/>
+                        </Template>
+                    </RadzenDataGridColumn>
+
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="Assignee" Property="Assignee" Title="Assignee" Width="175px;">
+                        <Template Context="issue">
+                            @if (!string.IsNullOrEmpty(issue.AssigneeAvatar))
+                            {
+                                <RadzenImage Path="@issue.AssigneeAvatar" class="icon"/>
+                            }
+                            @issue.Assignee
+                        </Template>
+                    </RadzenDataGridColumn>
+        
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="Reporter" Property="Reporter" Title="Reporter" Width="175px;">
+                        <Template Context="issue">
+                            @if (!string.IsNullOrEmpty(issue.ReporterAvatar))
+                            {
+                                <RadzenImage Path="@issue.ReporterAvatar" class="icon"/>
+                            }
+                            @issue.Reporter
+                        </Template>
+                    </RadzenDataGridColumn>
+                    
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="Start Date" Property="StartDate" Title="StartDate" Width="105px" Groupable="false">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=@BadgeStyle.Dark Text="@issue.StartDate"/>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="DueDate" Property="DueDate" Title="DueDate" Width="105px" Groupable="false">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=@BadgeStyle.Dark Text="@issue.DueDate"/>
+                        </Template>
+                    </RadzenDataGridColumn>
+        
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="TimeOriginalEstimate" Property="TimeOriginalEstimate" Title="Original" Width="120px;" Groupable="false">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.TimeOriginalEstimate.ToWorkingDaysHoursMinutes()"/>
+                        </Template>
+                        <FooterTemplate>
+                            <strong>@(order.Issues.Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</strong>
+                        </FooterTemplate>
+                        <GroupFooterTemplate>
+                            <strong>@(context.Data.Items.Cast<RightModel>().Sum(o => o.TimeOriginalEstimate).ToWorkingDaysHoursMinutes())</strong>
+                        </GroupFooterTemplate>
+                    </RadzenDataGridColumn>
+        
+                    <RadzenDataGridColumn TItem="RightModel" SortProperty="TimeSpent" Property="TimeSpent" Title="Spent" Width="120px;">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.TimeSpent.ToWorkingDaysHoursMinutes()"/>
+                        </Template>
+                        <FooterTemplate>
+                            <strong>@(order.Issues.Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</strong>
+                        </FooterTemplate>
+                        <GroupFooterTemplate>
+                            <strong>@(context.Data.Items.Cast<RightModel>().Sum(o => o.TimeSpent).ToWorkingDaysHoursMinutes())</strong>
+                        </GroupFooterTemplate>
+                    </RadzenDataGridColumn>
+        
+                    <RadzenDataGridColumn TItem="RightModel" Property="RemainingEstimate" Title="Remaining" Width="120px;">
+                        <Template Context="issue">
+                            <RadzenBadge IsPill="true" Variant="Variant.Text" BadgeStyle=BadgeStyle.Dark Text="@issue.RemainingEstimate.ToWorkingDaysHoursMinutes()"/>
+                        </Template>
+                        <FooterTemplate>
+                            <strong>@(order.Issues.Sum(o => o.RemainingEstimate).ToWorkingDaysHoursMinutes())</strong>
+                        </FooterTemplate>
+                        <GroupFooterTemplate>
+                            <strong class="rz-color-secondary">@(context.Data.Items.Cast<RightModel>().Sum(model => model.RemainingEstimate).ToWorkingDaysHoursMinutes())</strong>
+                        </GroupFooterTemplate>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </Template>
+
+        <Columns>
+
+            <RadzenDataGridColumn TItem="LeftModel" SortProperty="Key" Groupable="true" Property="Key" Title="Key" Width="110px;">
+                <Template Context="issue">
+                        <RadzenLink Path=@($"{CompanyOptions.Get(LeftKey).Jira.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="LeftModel" SortProperty="Summary" Groupable="false" Property="Summary" Title="Summary" Width="250px;"/>
+            <RadzenDataGridColumn TItem="LeftModel" SortProperty="Assignee" Groupable="false" Property="Assignee" Title="Assignee" Width="180px;"/>
+            <RadzenDataGridColumn TItem="LeftModel" SortProperty="Reporter" Groupable="false" Property="Reporter" Title="Reporter" Width="180px;"/>
+            <RadzenDataGridColumn TItem="LeftModel" SortProperty="Status" Property="Status" Title="Status" Width="130px;">
+                <Template Context="issue">
+                    <RadzenBadge IsPill="true" Variant="Variant.Outlined" BadgeStyle=@issue.StatusColor Text="@issue.Status"/>
+                </Template>
+            </RadzenDataGridColumn>
+            
+        </Columns>
+    </RadzenDataGrid>
+</RadzenStack>

@@ -2,6 +2,7 @@
 
 using Extensions;
 using Pages;
+using Pages.Filters;
 
 public record JqlModel(IEnumerable<string>? Projects = default,
     IEnumerable<(string ProjectId, string Id)>? IncludedComponents = default, IEnumerable<(string ProjectId, string Id)>? ExcludedComponents = default, bool? EmptyComponents = true,

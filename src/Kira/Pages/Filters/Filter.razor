@@ -1,0 +1,220 @@
+@using Kira.Builders
+<RadzenTemplateForm TItem="FormModel" Data="@formModel" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+<RadzenRow Class="rz-p-0" Gap="2rem">
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenStack>
+            <RadzenFieldset Text="Projects">
+                <RadzenStack Gap="1rem">
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="12">
+                            <RadzenDropDown
+                                Name="ProjectsDDL"
+                                @bind-Value="formModel.SelectedProjects"
+                                Data="formModel.Projects"
+                                TextProperty="Key"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Change="@(ProjectChange)"
+                                Disabled="isLoading"
+                                Multiple="true"
+                                AllowClear="true"
+                                AllowSelectAll="false"
+                                Chips="true"
+                                Placeholder="Select projects"
+                                Style="width: 100%;">
+                                <Template Context="project">
+                                    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center">
+                                        <RadzenImage Path="@((project as ProjectModel)?.Avatar)" Style="width: 24px; height: 24px;"/> @((project as ProjectModel)?.Key)
+                                    </RadzenStack>
+                                </Template>
+                            </RadzenDropDown>
+                            <RadzenCustomValidator Component="ProjectsDDL" Validator="@LeftBound" Text="Select at least one project" Popup="@popup"/>
+                            <RadzenCustomValidator Component="ProjectsDDL" Validator="@RightBound" Text="Select up to 3 projects" Popup="@popup"/>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenStack>
+        <RadzenStack>
+            <RadzenFieldset Text="Components">
+                <RadzenStack Gap="1rem">
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Included"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedIncludedComponents"
+                                Data="formModel.IncludedComponents"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                Change="@(IncludedComponentsChange)"
+                                Disabled="@(isLoading || !formModel.IncludedComponents.Any())"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Multiple="true"
+                                AllowClear="true"
+                                Chips="true"
+                                AllowSelectAll="false"
+                                Placeholder="Select components"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Excluded"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedExcludedComponents"
+                                Data="formModel.ExcludedComponents"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                Change="@(ExcludedComponentsChange)"
+                                Disabled="@(isLoading || !formModel.ExcludedComponents.Any())"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Multiple="true"
+                                AllowClear="true"
+                                Chips="true"
+                                AllowSelectAll="false"
+                                Placeholder="Select components"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Is Empty"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenCheckBox TValue="bool?" TriState="true" @bind-Value="formModel.EmptyComponents"/>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenStack>
+            <RadzenFieldset Text="Types">
+                <RadzenStack Gap="1rem">
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Included:"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedIncludedTypes"
+                                Data="formModel.IncludedTypes"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Change="@(IncludedTypesChange)"
+                                Disabled="@(isLoading || !formModel.IncludedTypes.Any())"
+                                Multiple="true"
+                                AllowClear="true"
+                                AllowSelectAll="false"
+                                Chips="true"
+                                Placeholder="Select types"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Excluded:"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedExcludedTypes"
+                                Data="formModel.ExcludedTypes"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                Change="@(ExcludedTypesChange)"
+                                Disabled="@(isLoading || !formModel.ExcludedTypes.Any())"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Multiple="true"
+                                AllowClear="true"
+                                AllowSelectAll="false"
+                                Chips="true"
+                                Placeholder="Select types"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenStack>
+        <RadzenStack>
+            <RadzenFieldset Text="Statues">
+                <RadzenStack Gap="1rem">
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Included:"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedIncludedStatues"
+                                Data="formModel.IncludedStatues"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                Change="@(IncludedStatuesChange)"
+                                Disabled="@(isLoading || !formModel.IncludedStatues.Any())"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Multiple="true"
+                                AllowClear="true"
+                                AllowSelectAll="false"
+                                Chips="true"
+                                Placeholder="Select statues"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center">
+                        <RadzenColumn Size="12" SizeMD="2">
+                            <RadzenLabel Text="Excluded:"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="10">
+                            <RadzenDropDown
+                                @bind-Value="formModel.SelectedExcludedStatues"
+                                Data="formModel.ExcludedStatues"
+                                TextProperty="Name"
+                                DisabledProperty="Disabled"
+                                Change="@(ExcludedStatuesChange)"
+                                Disabled="@(isLoading || !formModel.ExcludedStatues.Any())"
+                                AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                Multiple="true"
+                                AllowClear="true"
+                                AllowSelectAll="false"
+                                Chips="true"
+                                Placeholder="Select statues"
+                                Style="width: 100%;">
+                            </RadzenDropDown>
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenStack>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Class="rz-mt-2 rz-mb-2">
+    <div>
+        <RadzenCheckBox TriState="false" @bind-Value="popup" Name="PopUp"/>
+        <RadzenLabel Text="Popup" Component="Popup" Style="margin-left: 8px; vertical-align: middle;"/>
+    </div>
+    <RadzenButton Disabled="@(isLoading || !LeftBound() || !RightBound())" ButtonType="ButtonType.Submit" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Lighter" Variant="Variant.Outlined" Icon="search" Text="Search"/>
+</RadzenStack>
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Class="rz-mt-2 rz-mb-2">
+    <div>
+        <strong>Query: </strong>
+        <RadzenBadge BadgeStyle="BadgeStyle.Dark" Shade="Shade.Light" Variant="Variant.Text" Text="@(((JqlModel)formModel).ToJql())"></RadzenBadge>
+    </div>
+    @if (isLoading)
+    {
+        <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Warning" IsPill="true" Text="Loading ..." class="rz-ml-2"/>
+    }
+    else
+    {
+        <RadzenBadge Variant="Variant.Outlined" Shade="Shade.Light" BadgeStyle="BadgeStyle.Success" IsPill="true" Text="Loaded" class="rz-ml-2"/>
+    }
+</RadzenStack>
+</RadzenTemplateForm>

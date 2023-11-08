@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>preview</LangVersion>
@@ -35,24 +35,31 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Update="Pages\Filter.model.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
-        </Compile>
-        <Compile Update="Pages\Filter.designer.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
-        </Compile>
-        <Compile Update="Pages\Filter.model.abstarct.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
-        </Compile>
-        <Compile Update="Pages\Filter.model.form.razor.cs">
-            <DependentUpon>Filter.razor</DependentUpon>
-        </Compile>
-        <Compile Update="Pages\Workflow.designer.razor.cs">
-            <DependentUpon>Workloads.razor</DependentUpon>
-        </Compile>
-        <Compile Update="Pages\Workloads.model.razor.cs">
-            <DependentUpon>Workloads.razor</DependentUpon>
-        </Compile>
+      <Compile Update="Pages\Filters\Filter.razor.model.cs">
+        <DependentUpon>Filter.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Filters\Filter.razor.model.abstarct.cs">
+        <DependentUpon>Filter.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Filters\Filter.razor.model.form.cs">
+        <DependentUpon>Filter.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Workloads\Company1.razor.model.cs">
+        <DependentUpon>Company1.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Workloads\Company2.razor.model.cs">
+        <DependentUpon>Company2.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Filters\LinkFilter.razor.model.cs">
+        <DependentUpon>LinkFilter.razor.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Rosetta.razor.model.cs">
+        <DependentUpon>Rosetta.razor.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Remove="Pages\Filter.razor" />
+    </ItemGroup>
+    
 </Project>

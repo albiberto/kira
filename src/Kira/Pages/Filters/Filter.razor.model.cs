@@ -1,4 +1,4 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Filters;
 
 using Domain;
 

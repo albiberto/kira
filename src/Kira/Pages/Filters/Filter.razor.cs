@@ -1,8 +1,8 @@
-﻿namespace Kira.Pages;
+﻿namespace Kira.Pages.Filters;
 
 using System.Collections.Immutable;
+using Infrastructure.Services;
 using Builders;
-using Infrastructure.Clients;
 using Infrastructure.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
@@ -12,21 +12,23 @@ public partial class Filter
 {
     readonly HashSet<string> evaluatedProjects = new();
 
-    [Inject] JiraClient Client { get; set; } = null!;
-    [Inject] IOptions<JiraOptions> Options { get; set; } = null!;
-    [Inject] NotificationService NotificationService { get; set; } = null!;
+    [Inject] IServiceProvider Provider { get; set; } = null!;
+    [Inject] IOptionsSnapshot<CompanyOptions> CompanyOptions { get; set; } = null!;
 
+    [Parameter] public JiraService Jira { get; set; } = null!;
+    [Parameter] public DefaultOptions Default { get; set; } = null!;
+    
     [Parameter] public JqlModel Query { get; set; } = new();
     [Parameter] public EventCallback<JqlModel> QueryChanged { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    
+    protected override async Task OnInitializedAsync() 
     {
-        var projects = (await Client.GetAllProjects()).ToList();
+        var projects = (await Jira.GetAllProjects()).ToList();
         formModel = new(projects);
 
-        await LoadProjectAsync(formModel.Projects.Where(project => Options.Value.Defaults.Projects.Contains(project.Id)));
+        await LoadProjectAsync(formModel.Projects.Where(project => Default.Projects.Contains(project.Id)));
 
-        formModel.Initialize(Options.Value.Defaults);
+        formModel.Initialize(Default);
     }
 
     async Task LoadProjectAsync(IEnumerable<ProjectModel>? projects)
@@ -38,8 +40,8 @@ public partial class Filter
         var toEvaluate = projects.ExceptBy(evaluatedProjects, project => project.Id).ToList();
         foreach (var project in toEvaluate)
         {
-            var components = await Client.GetAllProjectsComponents(project.Id);
-            var projectTypes = await Client.GetAllProjectStatues(project.Id);
+            var components = await Jira.GetAllProjectsComponents(project.Id);
+            var projectTypes = await Jira.GetAllProjectStatues(project.Id);
 
             formModel.Add(project, components.ToList(), projectTypes);
             evaluatedProjects.Add(project.Id);
@@ -65,9 +67,7 @@ public partial class Filter
     void IncludedStatuesChange(object? args) => Change(args, formModel.ExcludedStatues);
     void ExcludedStatuesChange(object? args) => Change(args, formModel.IncludedStatues);
 
-    static void Change<T>(
-        object? changedSelection, IEnumerable<T> listToUpdate
-        ) where T : IFilterModel
+    static void Change<T>(object? changedSelection, IEnumerable<T> listToUpdate) where T : IFilterModel
     {
         //These are all the selected IDs in the list that just changed, so they should be disabled in the other list
         var idsThatShouldBeDisabled = (changedSelection as IEnumerable<T> ?? Enumerable.Empty<T>())

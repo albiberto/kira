@@ -1,29 +1,16 @@
-﻿@page "/workloads"
-@using Kira.Extensions
-@using Kira.Infrastructure.Options
-@using Microsoft.Extensions.Options
-@using Kira.Builders
-@inject IOptions<JiraOptions> Options;
+﻿@page "/companies/company1"
 
-<Filter Query=Query QueryChanged=QueryChanged></Filter>
+@using Kira.Pages.Filters
+@using Kira.Extensions
+
+<Filter Query="Query" QueryChanged="QueryChanged" Jira="jira" Default="options.Defaults"></Filter>
 
 @if (Query.Empty)
 {
     return;
 }
 
-<RadzenCard class="my-2">
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Left">
-            <RadzenCheckBox TriState="true" TValue="bool?" @bind-Value="@allGroupsExpanded" Name="allGroupsExpanded" Change="@ToggleGroups"/>
-            <RadzenLabel Text="All groups expanded by default" Component="allGroupsExpanded" Style="margin-left: 8px; margin-right: 32px; vertical-align: middle;"/>
-        </RadzenStack>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Right">
-            <RadzenButton Text="Expand" Click="@(_ => ToggleGroups(true))" style="margin-right: 16px" Disabled=@(allGroupsExpanded == true) Size="ButtonSize.ExtraSmall"/>
-            <RadzenButton Text="Collapse" Click="@(_ => ToggleGroups(false))" Disabled=@(allGroupsExpanded == false) Size="ButtonSize.ExtraSmall"/>
-        </RadzenStack>
-    </RadzenStack>
-</RadzenCard>
+<Collapse @bind-Value="allGroupsExpanded"/>
 
 <RadzenStack class="rz-mt-4">
     <RadzenDataGrid @ref="grid"
@@ -89,11 +76,11 @@
                 <Template Context="issue">
                     @if (!issue.IsSubTask)
                     {
-                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                        <RadzenLink Path=@($"{options.UIAddress}{issue.Key}") Text="@issue.Key"/>
                     }
                     else
                     {
-                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/>
+                        <RadzenLink Path=@($"{options.UIAddress}{issue.ParentKey}") Text="@issue.ParentKey"/>
                     }
                 </Template>
             </RadzenDataGridColumn>
@@ -102,7 +89,7 @@
                 <Template Context="issue">
                     @if (issue.IsSubTask)
                     {
-                        <RadzenLink Path=@($"{Options.Value.UIAddress}{issue.Key}") Text="@issue.Key"/>
+                        <RadzenLink Path=@($"{options.UIAddress}{issue.Key}") Text="@issue.Key"/>
                     }
                 </Template>
             </RadzenDataGridColumn>

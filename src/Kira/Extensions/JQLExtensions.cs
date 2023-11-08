@@ -1,6 +1,7 @@
 ﻿namespace Kira.Extensions;
 
 using Pages;
+using Pages.Filters;
 using Radzen;
 
 public static class JqlExtensions
